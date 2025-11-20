@@ -1,0 +1,61 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36623.8
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nfc.Api", "src\Nfc.Api\Nfc.Api.csproj", "{DCCBF99D-CD79-458C-9DAD-DDB70F67C962}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nfc.Domain", "src\Nfc.Domain\Nfc.Domain.csproj", "{7528A6A7-C204-4017-8FCC-A41FCDD1C480}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nfc.Infra.Data.EF", "src\Nfc.Infra.Data.EF\Nfc.Infra.Data.EF.csproj", "{15C1E638-88FA-418C-948A-DB1874633189}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nfc.Domain.Core", "src\Nfc.Domain.Core\Nfc.Domain.Core.csproj", "{A779F9E3-0580-4612-9E94-BC28DE11D7E0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nfc.Infra.CrossCutting.Commons", "src\Nfc.Infra.CrossCutting.Commons\Nfc.Infra.CrossCutting.Commons.csproj", "{7161C0ED-20E0-4827-8B97-B16BE17343C1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nfc.Application", "src\Nfc.Application\Nfc.Application.csproj", "{35B3A2D6-9003-411C-BE19-F3E0CDBE652C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nfc.Infra.CrossCutting.IoC", "src\Nfc.Infra.CrossCutting.IoC\Nfc.Infra.CrossCutting.IoC.csproj", "{BBEA9701-48B2-475F-BDE3-AD7F1ACAA16F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{DCCBF99D-CD79-458C-9DAD-DDB70F67C962}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DCCBF99D-CD79-458C-9DAD-DDB70F67C962}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DCCBF99D-CD79-458C-9DAD-DDB70F67C962}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DCCBF99D-CD79-458C-9DAD-DDB70F67C962}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7528A6A7-C204-4017-8FCC-A41FCDD1C480}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7528A6A7-C204-4017-8FCC-A41FCDD1C480}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7528A6A7-C204-4017-8FCC-A41FCDD1C480}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7528A6A7-C204-4017-8FCC-A41FCDD1C480}.Release|Any CPU.Build.0 = Release|Any CPU
+		{15C1E638-88FA-418C-948A-DB1874633189}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{15C1E638-88FA-418C-948A-DB1874633189}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{15C1E638-88FA-418C-948A-DB1874633189}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{15C1E638-88FA-418C-948A-DB1874633189}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A779F9E3-0580-4612-9E94-BC28DE11D7E0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A779F9E3-0580-4612-9E94-BC28DE11D7E0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A779F9E3-0580-4612-9E94-BC28DE11D7E0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A779F9E3-0580-4612-9E94-BC28DE11D7E0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7161C0ED-20E0-4827-8B97-B16BE17343C1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7161C0ED-20E0-4827-8B97-B16BE17343C1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7161C0ED-20E0-4827-8B97-B16BE17343C1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7161C0ED-20E0-4827-8B97-B16BE17343C1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{35B3A2D6-9003-411C-BE19-F3E0CDBE652C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{35B3A2D6-9003-411C-BE19-F3E0CDBE652C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{35B3A2D6-9003-411C-BE19-F3E0CDBE652C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{35B3A2D6-9003-411C-BE19-F3E0CDBE652C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BBEA9701-48B2-475F-BDE3-AD7F1ACAA16F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BBEA9701-48B2-475F-BDE3-AD7F1ACAA16F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BBEA9701-48B2-475F-BDE3-AD7F1ACAA16F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BBEA9701-48B2-475F-BDE3-AD7F1ACAA16F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {E0A830AD-4CBB-46B4-8680-78FEF0A013D5}
+	EndGlobalSection
+EndGlobal
