@@ -21,6 +21,7 @@ namespace Nfc.Domain.Entity
         {
             Descricao = descricao ?? Descricao;
             Valor = valor ?? Valor;
+            Validar();
         }
 
         private void Validar()

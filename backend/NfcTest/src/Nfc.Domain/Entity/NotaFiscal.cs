@@ -12,6 +12,7 @@ namespace Nfc.Domain.Entity
         {
             Emissor = emissor;
             DataEmissao = dataEmissao;
+            Validar();
         }
         public virtual decimal CalcularValorTotal()
             => Items.Sum(i => i.Valor);
@@ -19,26 +20,29 @@ namespace Nfc.Domain.Entity
         public virtual void AdicionarItem(Item item)
         {
             Items.Add(item);
+            Validar();
         }
 
         public void RemoverItem(Item item)
         {
             Items.Remove(item);
+            Validar();
         }
 
         public void RemoverTodosItens()
         {
             Items.Clear();
+            Validar();
         }
 
         public void Atualizar(string? emissor = null, DateTime? dataEmissao = null)
         {
             Emissor = emissor ?? Emissor;
             DataEmissao = dataEmissao ?? DataEmissao;
-            Validate();
+            Validar();
         }
 
-        private void Validate()
+        private void Validar()
         {
             Validation.DomainValidation.NotNullOrEmpty(Emissor, nameof(Emissor));
             Validation.DomainValidation.MinLength(Emissor, 2, nameof(Emissor));
