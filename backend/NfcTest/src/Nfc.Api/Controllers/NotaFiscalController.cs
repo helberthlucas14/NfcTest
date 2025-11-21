@@ -11,6 +11,7 @@ using System.Threading;
 
 namespace Nfc.Api.Controllers
 {
+
     [ApiController]
     [Route("api/[controller]")]
     public class NotaFiscalController : ControllerBase
@@ -68,7 +69,7 @@ namespace Nfc.Api.Controllers
             var result = await _mediator.Send(
                 new UpdateNotaFiscalCommand()
                 {
-                    Id = command.Id,
+                    Id = id,
                     Emissor = command.Emissor,
                     DataEmissao = command.DataEmissao,
                     Items = command.Items

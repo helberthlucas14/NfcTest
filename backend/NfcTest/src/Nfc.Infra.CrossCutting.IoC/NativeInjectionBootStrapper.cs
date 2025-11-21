@@ -3,6 +3,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Nfc.Application.Behaviors;
+using Nfc.Application.Export;
+using Nfc.Application.Export.Exporters;
+using Nfc.Application.Export.Interfaces;
 using Nfc.Application.Logging;
 using Nfc.Application.Services;
 using Nfc.Application.UseCases.NotaFiscal.Common;
@@ -16,6 +19,7 @@ using Nfc.Domain.Interfaces.Services;
 using Nfc.Infra.Data.EF;
 using Nfc.Infra.Data.EF.Repositories;
 using Nfc.Infra.HangFire;
+using Nfc.Infra.HangFire.Jobs;
 
 namespace Nfc.Infra.CrossCutting.IoC
 {
@@ -23,9 +27,9 @@ namespace Nfc.Infra.CrossCutting.IoC
     {
         public static IServiceCollection RegisterServices(this IServiceCollection services, IConfiguration configuration)
         {
-            RegisterInfraService(services, configuration);
             RegisterApplicationServices(services);
             RegisterDomainServices(services);
+            RegisterInfraService(services, configuration);
             return services;
         }
 
@@ -36,6 +40,19 @@ namespace Nfc.Infra.CrossCutting.IoC
             AddAppConections(services, configuration);
             services.AddScoped<INotaFiscalRepository, NotaFiscalRepository>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+
+            services.AddSingleton<IApplicationLogging, ApplicationLogging>();
+
+            services.AddScoped<IExporter, JsonExporter>();
+            services.AddScoped<IExporter, TextExporter>();
+            services.AddScoped<IExportFactory, ExportFactory>();
+            services.AddScoped<IExportNotasFiscalService, ExportNotasFiscalService>();
+            services.AddScoped<ICorrelationContext, CorrelationContext>();
+            services.AddScoped<IExportScheduler, ExportScheduler>();
+            services.AddScoped<ExportJob>();
+
+            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(LoggingBehavior<,>));
             return services;
         }
 
@@ -43,7 +60,6 @@ namespace Nfc.Infra.CrossCutting.IoC
         {
             services.AddSqlDbRegistration(configuration);
             services.AddHangfireInfrastructure(configuration);
-
             services.AddHttpLogging(logging =>
             {
                 logging.LoggingFields = Microsoft.AspNetCore.HttpLogging.HttpLoggingFields.All;
@@ -68,9 +84,7 @@ namespace Nfc.Infra.CrossCutting.IoC
 
         private static IServiceCollection RegisterDomainServices(this IServiceCollection services)
         {
-            services.AddScoped<ICorrelationContext, CorrelationContext>();
-            services.AddSingleton<IApplicationLogging, ApplicationLogging>();
-            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(LoggingBehavior<,>));
+
 
             services.AddScoped<INotaFiscalService, NotaFiscalService>();
 

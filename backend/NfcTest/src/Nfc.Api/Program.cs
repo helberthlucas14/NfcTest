@@ -10,7 +10,15 @@ builder.Services
     .RegisterServices(builder.Configuration)
     .AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Program).Assembly))
     .AddHttpContextAccessor()
-    .AddControllers();
+    .AddControllers()
+
+    ;
+
+builder.Services
+    .AddCors(p => p.AddPolicy("CORS", builder =>
+{
+    builder.WithOrigins("*").AllowAnyMethod().AllowAnyHeader();
+}));
 
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
@@ -24,7 +32,9 @@ if (app.Environment.IsDevelopment())
     app.MapScalarApiReference();
 }
 
-app.UseHttpsRedirection();
+app.UseCors("CORS");
+
+//app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
@@ -33,3 +43,4 @@ app.UseHangfireDashboardUI();
 app.MapControllers();
 
 app.Run();
+

@@ -1,8 +1,10 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using FC.Codeflix.Catalog.Application.Exceptions;
+using Microsoft.Extensions.Logging;
 using Nfc.Application.UseCases.NotaFiscal.Common;
 using Nfc.Domain.Entity;
 using Nfc.Domain.Interfaces.Repositories;
 using Nfc.Domain.Interfaces.Services;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Nfc.Application.Services
 {
@@ -49,16 +51,14 @@ namespace Nfc.Application.Services
             CancellationToken cancellationToken)
         {
             _logger.LogInformation($"Operation: {nameof(UpdateAsync)} : Entity:{nameof(NotaFiscal)} : {id} : {DateTime.Now}");
-            var entity = await _repository.GetByIdAsync(id, cancellationToken);
+            var entity = _repository.GetAllQuery.FirstOrDefault(n => n.Id == id);
+            
+            NotFoundException.ThrowIfNull(entity, $"NotaFiscal '{id}' not found.");
+           
             entity.Atualizar(emissor, dataEmissao);
-
-            var existingById = entity.Items.ToDictionary(i => i.Id);
             entity.RemoverTodosItens();
-
             foreach (var item in items)
                 entity.AdicionarItem(new Item(entity.Id, item.Descricao, item.Valor));
-
-            await _repository.UpdateAsync(entity, cancellationToken);
 
             return entity;
         }

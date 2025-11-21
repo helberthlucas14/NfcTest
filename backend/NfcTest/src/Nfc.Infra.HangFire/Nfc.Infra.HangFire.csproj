@@ -14,7 +14,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Folder Include="Jobs\" />
+	  <ProjectReference Include="..\Nfc.Application\Nfc.Application.csproj" />
 	</ItemGroup>
 
 </Project>

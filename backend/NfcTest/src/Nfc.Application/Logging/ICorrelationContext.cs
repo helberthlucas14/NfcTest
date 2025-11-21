@@ -3,5 +3,7 @@
     public interface ICorrelationContext
     {
         Guid CorrelationId { get; set; }
+        string? JobId { get; set; }
+
     }
 }
