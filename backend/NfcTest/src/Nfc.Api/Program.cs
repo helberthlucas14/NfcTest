@@ -31,6 +31,4 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-//app.UseMiddleware<CorrelationIdMiddleware>();
-
 app.Run();

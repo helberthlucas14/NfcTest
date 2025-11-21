@@ -15,4 +15,8 @@
     <ProjectReference Include="..\Nfc.Application\Nfc.Application.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Middlewares\" />
+  </ItemGroup>
+
 </Project>

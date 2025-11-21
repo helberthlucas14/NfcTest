@@ -9,5 +9,6 @@ namespace Nfc.Domain.Interfaces.Services.Base
         IQueryable<TEntity> GetAllQuery { get; }
         Task<TEntity> GetByIdAsync(long id, CancellationToken cancellationToken);
         Task<bool> ExistsAsync(long id, CancellationToken cancellationToken);
+        Task DeleteByIdAsync(long id, CancellationToken cancellationToken);
     }
 }

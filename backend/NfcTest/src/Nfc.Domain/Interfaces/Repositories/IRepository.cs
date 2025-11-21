@@ -9,5 +9,6 @@ namespace Nfc.Domain.Interfaces.Repositories
         Task<TEntity> GetByIdAsync(long id, CancellationToken cancellationToken);
         Task<bool> ExistsAsync(long id, CancellationToken cancellationToken);
         Task UpdateAsync(TEntity entity, CancellationToken cancellationToken);
+        Task DeleteByIdAsync(TEntity entity, CancellationToken cancellationToken);
     }
 }

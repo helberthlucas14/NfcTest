@@ -6,12 +6,6 @@ namespace Nfc.Application.UseCases.NotaFiscal.CriarNotaFiscal
     {
         public string Emissor { get; set; }
         public DateTime DataEmissao { get; set; }
-        public List<CriarItemCommand> Items { get; set; } = new();
-    }
-
-    public class CriarItemCommand
-    {
-        public string Descricao { get; set; }
-        public decimal Valor { get; set; }
+        public List<ItemModelRequest> Items { get; set; } = new();
     }
 }

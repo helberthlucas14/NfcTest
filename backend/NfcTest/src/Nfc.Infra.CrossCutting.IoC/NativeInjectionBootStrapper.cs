@@ -5,7 +5,10 @@ using Nfc.Application.Logging;
 using Nfc.Application.Services;
 using Nfc.Application.UseCases.NotaFiscal.Common;
 using Nfc.Application.UseCases.NotaFiscal.CriarNotaFiscal;
+using Nfc.Application.UseCases.NotaFiscal.DeleteById;
+using Nfc.Application.UseCases.NotaFiscal.GetAll;
 using Nfc.Application.UseCases.NotaFiscal.GetById;
+using Nfc.Application.UseCases.NotaFiscal.UpdateNotaFiscal;
 using Nfc.Domain.Interfaces.Repositories;
 using Nfc.Domain.Interfaces.Services;
 using Nfc.Infra.Data.EF;
@@ -46,6 +49,9 @@ namespace Nfc.Infra.CrossCutting.IoC
         {
             services.AddScoped<IRequestHandler<CriarNotaFiscalCommand, NotaFiscalResponse>, CriarNotaFiscalCommandHandler>();
             services.AddScoped<IRequestHandler<GetByIdQuery, NotaFiscalResponse>, GetByIdQueryHandler>();
+            services.AddScoped<IRequestHandler<UpdateNotaFiscalCommand, NotaFiscalResponse>, UpdateNotaFiscalCommandHandler>();
+            services.AddScoped<IRequestHandler<GetAllQuery, PagedList<NotaFiscalResponse>>, GetAllQueryHandler>();
+            services.AddScoped<IRequestHandler<DeleteByIdCommand, Unit>, DeleteByIdCommandHandler>();
 
 
             return services;

@@ -1,5 +1,6 @@
 ﻿using FC.Codeflix.Catalog.Application.Exceptions;
 using Microsoft.EntityFrameworkCore;
+using Nfc.Application.UseCases.NotaFiscal.Common;
 using Nfc.Domain.Entity;
 using Nfc.Domain.Interfaces.Repositories;
 
@@ -14,6 +15,20 @@ namespace Nfc.Infra.Data.EF.Repositories
 
         public IQueryable<NotaFiscal> GetAllQuery => _notas
             .Include(n => n.Items);
+
+        public async Task<PagedList<NotaFiscal>> GetAllAsync(NotaFiscalQueryStringParameters parameters,
+            CancellationToken cancellationToken)
+        {
+            var allNotas = await _context.NotasFiscais
+                    .Include(n => n.Items)
+                    .Skip((parameters.PageNumber - 1) * parameters.PageSize)
+                    .Take(parameters.PageSize)
+                    .ToListAsync(cancellationToken);
+
+            var pagedNotas = PagedList<NotaFiscal>.ToPagedList(allNotas, parameters.PageNumber, parameters.PageSize);
+
+            return pagedNotas;
+        }
 
         public async Task<NotaFiscal> AddAsync(NotaFiscal entity, CancellationToken cancellationToken)
         {
@@ -37,7 +52,15 @@ namespace Nfc.Infra.Data.EF.Repositories
         }
 
         public Task UpdateAsync(NotaFiscal entity, CancellationToken _)
-                 => Task.FromResult(_notas.Update(entity));
+        {
+            return Task.FromResult(_notas.Update(entity));
+        }
+
+        public Task DeleteByIdAsync(NotaFiscal notaFiscal, CancellationToken cancellationToken)
+        {
+            _notas.Remove(notaFiscal);
+            return Task.CompletedTask;
+        }
 
         public void Dispose()
         {
