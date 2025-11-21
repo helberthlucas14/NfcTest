@@ -10,4 +10,8 @@
     <ProjectReference Include="..\Nfc.Domain.Core\Nfc.Domain.Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Services\" />
+  </ItemGroup>
+
 </Project>

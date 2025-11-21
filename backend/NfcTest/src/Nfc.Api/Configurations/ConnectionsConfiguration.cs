@@ -11,6 +11,10 @@ namespace Nfc.Api.Configurations
         )
         {
             services.AddDbConnection(configuration);
+            services.AddHttpLogging(logging =>
+            {
+                logging.LoggingFields = Microsoft.AspNetCore.HttpLogging.HttpLoggingFields.All;
+            });
             return services;
         }
         private static IServiceCollection AddDbConnection(
@@ -20,6 +24,7 @@ namespace Nfc.Api.Configurations
         {
             var connectionString = configuration
                 .GetConnectionString("NfeDb");
+            ArgumentNullException.ThrowIfNull(connectionString);
             services.AddDbContext<NfcDbContext>(
                 options => options.UseSqlServer(
                     connectionString

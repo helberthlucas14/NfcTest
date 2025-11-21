@@ -4,11 +4,11 @@ namespace Nfc.Domain.Entity
 {
     public class Item : EntyCore.Entity
     {
-        public Guid NotaFiscalId { get; private set; }
+        public long NotaFiscalId { get; private set; }
         public string Descricao { get; private set; }
         public decimal Valor { get; private set; }
 
-        public Item(Guid notaFiscalId, string descricao, decimal valor)
+        public Item(long notaFiscalId, string descricao, decimal valor)
         {
             NotaFiscalId = notaFiscalId;
             Descricao = descricao;

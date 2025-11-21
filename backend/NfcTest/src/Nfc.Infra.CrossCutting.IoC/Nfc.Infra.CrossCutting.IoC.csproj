@@ -6,4 +6,15 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="MediatR" Version="13.1.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Nfc.Application\Nfc.Application.csproj" />
+    <ProjectReference Include="..\Nfc.Infra.CrossCutting.Commons\Nfc.Infra.CrossCutting.Commons.csproj" />
+    <ProjectReference Include="..\Nfc.Infra.Data.EF\Nfc.Infra.Data.EF.csproj" />
+  </ItemGroup>
+
 </Project>

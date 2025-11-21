@@ -1,4 +1,5 @@
 using Nfc.Api.Configurations;
+using Nfc.Infra.CrossCutting.IoC;
 using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -6,8 +7,12 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 builder.Services
+    .RegisterServices()
+    .AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Program).Assembly))
+    .AddHttpContextAccessor()
     .AddAppConections(builder.Configuration)
     .AddControllers();
+
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 
@@ -25,5 +30,7 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
+//app.UseMiddleware<CorrelationIdMiddleware>();
 
 app.Run();

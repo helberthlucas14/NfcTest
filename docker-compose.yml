@@ -1,0 +1,17 @@
+services:
+  nfc.mvp:
+    container_name: nfcDb
+    hostname: nfcDb
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    ports:
+      - 1433:1433
+    environment:
+      SA_PASSWORD: "SqlServer2019!"
+      ACCEPT_EULA: "Y"
+    networks:
+      - service_nfc_network
+    restart: always
+
+networks:
+  service_nfc_network:
+    driver: bridge

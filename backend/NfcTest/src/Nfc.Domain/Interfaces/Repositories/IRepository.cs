@@ -4,14 +4,10 @@ namespace Nfc.Domain.Interfaces.Repositories
 {
     public interface IRepository<TEntity> : IDisposable where TEntity : CoreEntity.Entity
     {
-        Task<TEntity> AddAsync(TEntity entity);
-
-        Task<TEntity> GetByIdAsync(Guid id);
-
         IQueryable<TEntity> GetAllQuery { get; }
-
-        Task<bool> ExistsAsync(Guid id);
-
-        public Task<bool> UpdateAsync(TEntity entity);
+        Task<TEntity> AddAsync(TEntity entity, CancellationToken cancellationToken);
+        Task<TEntity> GetByIdAsync(long id, CancellationToken cancellationToken);
+        Task<bool> ExistsAsync(long id, CancellationToken cancellationToken);
+        Task UpdateAsync(TEntity entity, CancellationToken cancellationToken);
     }
 }

@@ -8,7 +8,7 @@ USE [NfeMvp];
 GO
 
 CREATE TABLE dbo.NotaFiscal (
-    Id INT IDENTITY(1,1) PRIMARY KEY,
+    Id BIGINT IDENTITY(1,1) PRIMARY KEY,
     Emissor NVARCHAR(150) NOT NULL,
     DataEmissao DATE NOT NULL
 );
@@ -16,8 +16,8 @@ CREATE TABLE dbo.NotaFiscal (
 CREATE INDEX IX_NotaFiscal_DataEmissao ON dbo.NotaFiscal(DataEmissao);
 
 CREATE TABLE dbo.Item (
-    Id INT IDENTITY(1,1) PRIMARY KEY,
-    NotaFiscalId INT NOT NULL,
+    Id BIGINT IDENTITY(1,1) PRIMARY KEY,
+    NotaFiscalId BIGINT  NOT NULL,
     Descricao NVARCHAR(255) NOT NULL,
     Valor DECIMAL(15, 3) NOT NULL,
     CONSTRAINT FK_Item_NotaFiscal FOREIGN KEY (NotaFiscalId)

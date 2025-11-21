@@ -11,9 +11,6 @@
 		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.0" />
 	</ItemGroup>
 	<ItemGroup>
-		<Folder Include="Repositories\" />
-	</ItemGroup>
-	<ItemGroup>
 	  <ProjectReference Include="..\Nfc.Domain\Nfc.Domain.csproj" />
 	  <ProjectReference Include="..\Nfc.Infra.CrossCutting.Commons\Nfc.Infra.CrossCutting.Commons.csproj" />
 	</ItemGroup>
