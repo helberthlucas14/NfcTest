@@ -12,21 +12,6 @@ services:
       - service_nfc_network
     restart: always
 
-  nfc.redis:
-    container_name: nfc_redis_db
-    image: redis:latest
-    ports:
-      - "6379:6379"
-    command: ["redis-server", "--appendonly", "yes"]
-    volumes:
-      - redis-data:/data
-    networks:
-      - service_nfc_network
-    restart: always
-
-volumes:
-  redis-data:
-
 networks:
   service_nfc_network:
     driver: bridge

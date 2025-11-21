@@ -17,6 +17,15 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nfc.Application", "src\Nfc.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nfc.Infra.CrossCutting.IoC", "src\Nfc.Infra.CrossCutting.IoC\Nfc.Infra.CrossCutting.IoC.csproj", "{BBEA9701-48B2-475F-BDE3-AD7F1ACAA16F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nfc.Infra.HangFire", "src\Nfc.Infra.HangFire\Nfc.Infra.HangFire.csproj", "{4D05E983-D70D-4614-B378-685F148486A5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nfc.Infra.Data.Redis", "src\Nfc.Infra.Data.Redis\Nfc.Infra.Data.Redis.csproj", "{5C8E53D7-6BC7-4ADB-B65A-4F619D710200}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "env", "env", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
+	ProjectSection(SolutionItems) = preProject
+		src\Nfc.Api\docker-compose.yml = src\Nfc.Api\docker-compose.yml
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +60,14 @@ Global
 		{BBEA9701-48B2-475F-BDE3-AD7F1ACAA16F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BBEA9701-48B2-475F-BDE3-AD7F1ACAA16F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BBEA9701-48B2-475F-BDE3-AD7F1ACAA16F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4D05E983-D70D-4614-B378-685F148486A5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4D05E983-D70D-4614-B378-685F148486A5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4D05E983-D70D-4614-B378-685F148486A5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4D05E983-D70D-4614-B378-685F148486A5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5C8E53D7-6BC7-4ADB-B65A-4F619D710200}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5C8E53D7-6BC7-4ADB-B65A-4F619D710200}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5C8E53D7-6BC7-4ADB-B65A-4F619D710200}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5C8E53D7-6BC7-4ADB-B65A-4F619D710200}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
