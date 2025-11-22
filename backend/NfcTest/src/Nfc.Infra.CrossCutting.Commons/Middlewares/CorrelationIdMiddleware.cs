@@ -1,5 +1,7 @@
 using Microsoft.AspNetCore.Http;
 using Nfc.Application.Logging;
+using Serilog.Context;
+using System.Diagnostics;
 
 namespace Nfc.Infra.CrossCutting.Commons.Middlewares
 {
@@ -31,7 +33,16 @@ namespace Nfc.Infra.CrossCutting.Commons.Middlewares
 
             context.Response.Headers[HeaderName] = correlationId.ToString();
 
-            await _next(context);
+            var current = Activity.Current;
+            if (current is not null)
+            {
+                current.SetTag("correlation.id", correlationId.ToString());
+            }
+
+            using (LogContext.PushProperty("CorrelationId", correlationId))
+            {
+                await _next(context);
+            }
         }
     }
 }

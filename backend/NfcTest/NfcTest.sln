@@ -28,6 +28,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "env", "env", "{02EA681E-C7D
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nfc.Infra.Storage", "src\Nfc.Infra.Storage\Nfc.Infra.Storage.csproj", "{C15075D4-1D22-4DB5-9894-24D44AFF5416}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nfc.Infra.Observability", "src\Nfc.Infra.Observability\Nfc.Infra.Observability.csproj", "{04BB03F4-7914-4B20-D9AF-DF7A3094BC48}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -74,6 +76,10 @@ Global
 		{C15075D4-1D22-4DB5-9894-24D44AFF5416}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C15075D4-1D22-4DB5-9894-24D44AFF5416}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C15075D4-1D22-4DB5-9894-24D44AFF5416}.Release|Any CPU.Build.0 = Release|Any CPU
+		{04BB03F4-7914-4B20-D9AF-DF7A3094BC48}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{04BB03F4-7914-4B20-D9AF-DF7A3094BC48}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{04BB03F4-7914-4B20-D9AF-DF7A3094BC48}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{04BB03F4-7914-4B20-D9AF-DF7A3094BC48}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

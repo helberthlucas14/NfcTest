@@ -22,6 +22,7 @@ using Nfc.Infra.HangFire;
 using Nfc.Infra.HangFire.Jobs;
 using Nfc.Infra.Data.Redis;
 using StackExchange.Redis;
+using Nfc.Infra.Observability;
 using Nfc.Application.UseCases.Export.ExportNotaFiscal;
 using Nfc.Application.UseCases.Export.GetExportStatusByJobId;
 using Nfc.Infra.Storage;
@@ -68,10 +69,7 @@ namespace Nfc.Infra.CrossCutting.IoC
             services.AddSqlDbRegistration(configuration);
             services.AddRedisDbRegistration(configuration);
             services.AddHangfireInfrastructure(configuration);
-            services.AddHttpLogging(logging =>
-            {
-                logging.LoggingFields = Microsoft.AspNetCore.HttpLogging.HttpLoggingFields.All;
-            });
+            services.AddObservability(configuration);
             return services;
         }
         private static IServiceCollection AddSqlDbRegistration(

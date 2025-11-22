@@ -4,6 +4,7 @@ using Nfc.Application.Services;
 using Nfc.Application.Export.Interfaces;
 using StackExchange.Redis;
 using System.Linq;
+using Serilog.Context;
 
 namespace Nfc.Infra.HangFire.Jobs
 {
@@ -42,7 +43,11 @@ namespace Nfc.Infra.HangFire.Jobs
             var db = _connection.GetDatabase();
             var dedupKey = BuildDedupKey(type, ids);
             var start = DateTime.UtcNow;
-            _logger.LogStarted(correlationId, nameof(ExecutarAsync), _ctx.JobId);
+            using (LogContext.PushProperty("CorrelationId", correlationId))
+            using (LogContext.PushProperty("JobId", _ctx.JobId))
+            {
+                _logger.LogStarted(correlationId, nameof(ExecutarAsync), _ctx.JobId);
+            }
             var startedStatus = new ExportStatus
             {
                 JobId = _ctx.JobId ?? string.Empty,
@@ -63,7 +68,11 @@ namespace Nfc.Infra.HangFire.Jobs
 
 
                 var duration = (DateTime.UtcNow - start).TotalMilliseconds;
-                _logger.LogCompleted(correlationId, nameof(ExecutarAsync), duration, _ctx.JobId);
+                using (LogContext.PushProperty("CorrelationId", correlationId))
+                using (LogContext.PushProperty("JobId", _ctx.JobId))
+                {
+                    _logger.LogCompleted(correlationId, nameof(ExecutarAsync), duration, _ctx.JobId);
+                }
                 var completedStatus = new ExportStatus
                 {
                     JobId = _ctx.JobId ?? string.Empty,
@@ -81,7 +90,11 @@ namespace Nfc.Infra.HangFire.Jobs
             catch (Exception ex)
             {
                 var duration = (DateTime.UtcNow - start).TotalMilliseconds;
-                _logger.LogFailure(correlationId, nameof(ExecutarAsync), duration, ex, _ctx.JobId);
+                using (LogContext.PushProperty("CorrelationId", correlationId))
+                using (LogContext.PushProperty("JobId", _ctx.JobId))
+                {
+                    _logger.LogFailure(correlationId, nameof(ExecutarAsync), duration, ex, _ctx.JobId);
+                }
                 var failedStatus = new ExportStatus
                 {
                     JobId = _ctx.JobId ?? string.Empty,

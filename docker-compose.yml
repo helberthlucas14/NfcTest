@@ -12,6 +12,18 @@ services:
       - service_nfc_network
     restart: always
 
+  db.setup:
+    image: mcr.microsoft.com/mssql-tools
+    depends_on:
+      nfc.mvp:
+        condition: service_started
+    networks:
+      - service_nfc_network
+    volumes:
+      - ./db:/db:ro
+    entrypoint: /bin/bash -c "until /opt/mssql-tools/bin/sqlcmd -S nfcDb,1433 -U sa -P SqlServer2019! -Q 'SELECT 1' >/dev/null 2>&1; do echo waiting for sqlserver; sleep 2; done; /opt/mssql-tools/bin/sqlcmd -S nfcDb,1433 -U sa -P SqlServer2019! -i /db/ddl.sql; /opt/mssql-tools/bin/sqlcmd -S nfcDb,1433 -U sa -P SqlServer2019! -i /db/seed.sql"
+    restart: "no"
+
   nfc.redis:
     container_name: nfc_redis_db
     image: redis:latest
@@ -41,6 +53,8 @@ services:
       - ./data:/var/lib/localstack      
       - /var/run/docker.sock:/var/run/docker.sock
       - ./bin:/docker-entrypoint-initaws.d
+    networks:
+      - service_nfc_network
 
   aws-cli:
     image: amazon/aws-cli:latest
@@ -59,9 +73,98 @@ services:
         tr -d '\r' < /tmp/setup.sh > /tmp/setup_unix.sh && \
         chmod +x /tmp/setup_unix.sh && \
         /tmp/setup_unix.sh
+    networks:
+      - service_nfc_network
+
+  seq:
+    image: datalust/seq:latest
+    depends_on:
+      - grafana
+    container_name: seq
+    ports:
+      - "5341:5341"
+      - "8081:80"
+    environment:
+      - ACCEPT_EULA=Y
+      - SEQ_FIRSTRUN_ADMINUSERNAME=admin
+      - SEQ_FIRSTRUN_ADMINPASSWORD=admin
+    volumes:
+      - seq-data:/data
+    networks:
+      - service_nfc_network
+    restart: always
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./observability/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    networks:
+      - service_nfc_network
+    restart: always
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    volumes:
+      - ./observability/grafana/datasources/datasources.yml:/etc/grafana/provisioning/datasources/datasources.yml:ro
+    networks:
+      - service_nfc_network
+    restart: always
+
+  nfc.api:
+    build:
+      context: ./backend/NfcTest
+      dockerfile: src/Nfc.Api/Dockerfile
+    container_name: nfc_api
+    depends_on:
+      db.setup:
+        condition: service_started
+      nfc.redis:
+        condition: service_started
+      localstack:
+        condition: service_started
+    environment:
+      ASPNETCORE_ENVIRONMENT: Docker
+      ASPNETCORE_URLS: http://+:8080
+      ConnectionStrings__NfeDb: Server=nfcDb,1433;Database=NfeMvp;Uid=SA;Pwd=SqlServer2019!;TrustServerCertificate=True
+      ConnectionStrings__RedisDb: nfc_redis_db:6379
+      Observability__SeqUrl: http://seq:5341
+      ExportFileStorage__Provider: S3
+      ExportFileStorage__S3__ServiceUrl: http://localstack:4566
+      ExportFileStorage__S3__BaseUrl: http://localstack:4566/my-dev-exports
+      ExportFileStorage__S3__AccessKey: test
+      ExportFileStorage__S3__SecretKey: test
+      ExportFileStorage__S3__Region: us-east-1
+    ports:
+      - "8085:8080"
+    networks:
+      - service_nfc_network
+    restart: unless-stopped
+
+  nfc.web:
+    build:
+      context: ./frontend/NfcTest
+    container_name: nfc_web
+    depends_on:
+      nfc.api:
+        condition: service_started
+    ports:
+      - "8082:80"
+    networks:
+      - service_nfc_network
+    restart: unless-stopped
 
 volumes:
   redis-data:
+  seq-data:
 
 networks:
   service_nfc_network:

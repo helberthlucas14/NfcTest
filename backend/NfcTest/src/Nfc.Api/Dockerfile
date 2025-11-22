@@ -19,6 +19,10 @@ COPY ["src/Nfc.Domain.Core/Nfc.Domain.Core.csproj", "src/Nfc.Domain.Core/"]
 COPY ["src/Nfc.Infra.CrossCutting.IoC/Nfc.Infra.CrossCutting.IoC.csproj", "src/Nfc.Infra.CrossCutting.IoC/"]
 COPY ["src/Nfc.Infra.CrossCutting.Commons/Nfc.Infra.CrossCutting.Commons.csproj", "src/Nfc.Infra.CrossCutting.Commons/"]
 COPY ["src/Nfc.Infra.Data.EF/Nfc.Infra.Data.EF.csproj", "src/Nfc.Infra.Data.EF/"]
+COPY ["src/Nfc.Infra.Data.Redis/Nfc.Infra.Data.Redis.csproj", "src/Nfc.Infra.Data.Redis/"]
+COPY ["src/Nfc.Infra.HangFire/Nfc.Infra.HangFire.csproj", "src/Nfc.Infra.HangFire/"]
+COPY ["src/Nfc.Infra.Storage/Nfc.Infra.Storage.csproj", "src/Nfc.Infra.Storage/"]
+COPY ["src/Nfc.Infra.Observability/Nfc.Infra.Observability.csproj", "src/Nfc.Infra.Observability/"]
 RUN dotnet restore "./src/Nfc.Api/Nfc.Api.csproj"
 COPY . .
 WORKDIR "/src/src/Nfc.Api"

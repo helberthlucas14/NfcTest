@@ -4,6 +4,9 @@ using Nfc.Application.Logging;
 using Nfc.Application.Services;
 using StackExchange.Redis;
 using System.Linq;
+using Serilog.Context;
+using System.Diagnostics;
+using Nfc.Infra.Observability;
 
 namespace Nfc.Infra.HangFire.Jobs
 {
@@ -30,8 +33,14 @@ namespace Nfc.Infra.HangFire.Jobs
         {
             var correlationId = Guid.NewGuid();
             _ctx.CorrelationId = correlationId;
-
-            _logger.LogStarted(correlationId, nameof(ScheduleExportAsync));
+            using var activity = ObservabilitySetup.Activity.StartActivity("hangfire.schedule", ActivityKind.Producer);
+            activity?.SetTag("export.type", type.ToString());
+            activity?.SetTag("export.ids.count", ids?.Length ?? 0);
+            activity?.SetTag("correlation.id", correlationId);
+            using (LogContext.PushProperty("CorrelationId", correlationId))
+            {
+                _logger.LogStarted(correlationId, nameof(ScheduleExportAsync));
+            }
             var db = _connection.GetDatabase();
             var dedupKey = BuildDedupKey(type, ids);
             var lockKey = dedupKey + ":lock";
@@ -41,7 +50,11 @@ namespace Nfc.Infra.HangFire.Jobs
             if (existingBeforeLock is not null)
             {
                 _ctx.JobId = existingBeforeLock;
-                _logger.LogCompleted(correlationId, nameof(ScheduleExportAsync), 0, existingBeforeLock);
+                using (LogContext.PushProperty("CorrelationId", correlationId))
+                using (LogContext.PushProperty("JobId", existingBeforeLock))
+                {
+                    _logger.LogCompleted(correlationId, nameof(ScheduleExportAsync), 0, existingBeforeLock);
+                }
                 return existingBeforeLock;
             }
 
@@ -52,7 +65,11 @@ namespace Nfc.Infra.HangFire.Jobs
                 if (existing is not null)
                 {
                     _ctx.JobId = existing;
-                    _logger.LogCompleted(correlationId, nameof(ScheduleExportAsync), 0, existing);
+                    using (LogContext.PushProperty("CorrelationId", correlationId))
+                    using (LogContext.PushProperty("JobId", existing))
+                    {
+                        _logger.LogCompleted(correlationId, nameof(ScheduleExportAsync), 0, existing);
+                    }
                     return existing;
                 }
             }
@@ -62,7 +79,11 @@ namespace Nfc.Infra.HangFire.Jobs
                 if (existing is not null)
                 {
                     _ctx.JobId = existing;
-                    _logger.LogCompleted(correlationId, nameof(ScheduleExportAsync), 0, existing);
+                    using (LogContext.PushProperty("CorrelationId", correlationId))
+                    using (LogContext.PushProperty("JobId", existing))
+                    {
+                        _logger.LogCompleted(correlationId, nameof(ScheduleExportAsync), 0, existing);
+                    }
                     return existing;
                 }
 
@@ -73,7 +94,11 @@ namespace Nfc.Infra.HangFire.Jobs
                 await db.StringSetAsync(dedupKey, jobId, DedupExpiry, When.NotExists);
 
                 _ctx.JobId = jobId;
-                _logger.LogCompleted(correlationId, nameof(ScheduleExportAsync), 0, jobId);
+                using (LogContext.PushProperty("CorrelationId", correlationId))
+                using (LogContext.PushProperty("JobId", jobId))
+                {
+                    _logger.LogCompleted(correlationId, nameof(ScheduleExportAsync), 0, jobId);
+                }
 
                 var status = new ExportStatus
                 {
