@@ -16,14 +16,18 @@ namespace Nfc.Infra.Storage
 
         public async Task<StoredFileInfo> SaveAsync(string jobId, ExportType type, Stream content, CancellationToken cancellationToken)
         {
+            using var buffer = new MemoryStream();
+            await content.CopyToAsync(buffer, cancellationToken);
+            var bytes = buffer.ToArray();
             try
             {
-                return await _primary.SaveAsync(jobId, type, content, cancellationToken);
+                using var msPrimary = new MemoryStream(bytes);
+                return await _primary.SaveAsync(jobId, type, msPrimary, cancellationToken);
             }
             catch
             {
-                content.Position = 0;
-                return await _fallback.SaveAsync(jobId, type, content, cancellationToken);
+                using var msFallback = new MemoryStream(bytes);
+                return await _fallback.SaveAsync(jobId, type, msFallback, cancellationToken);
             }
         }
 
