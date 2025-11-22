@@ -24,6 +24,7 @@ using Nfc.Infra.Data.Redis;
 using StackExchange.Redis;
 using Nfc.Application.UseCases.Export.ExportNotaFiscal;
 using Nfc.Application.UseCases.Export.GetExportStatusByJobId;
+using Nfc.Infra.Storage;
 
 namespace Nfc.Infra.CrossCutting.IoC
 {
@@ -42,14 +43,13 @@ namespace Nfc.Infra.CrossCutting.IoC
             IConfiguration configuration)
         {
             AddAppConections(services, configuration);
-
             services.AddScoped<INotaFiscalRepository, NotaFiscalRepository>();
             services.AddScoped<IExportStatusRepository, RedisExportStatusRepository>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
-
             services.AddSingleton<IApplicationLogging, ApplicationLogging>();
 
+            services.AddExportFileStorage(configuration);
             services.AddScoped<IExporter, JsonExporter>();
             services.AddScoped<IExporter, TextExporter>();
             services.AddScoped<IExportFactory, ExportFactory>();
@@ -103,8 +103,6 @@ namespace Nfc.Infra.CrossCutting.IoC
 
         private static IServiceCollection RegisterDomainServices(this IServiceCollection services)
         {
-
-
             services.AddScoped<INotaFiscalService, NotaFiscalService>();
 
             return services;

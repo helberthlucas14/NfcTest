@@ -1,6 +1,7 @@
 using Nfc.Application.Export;
 using Nfc.Application.Logging;
 using Nfc.Application.Services;
+using Nfc.Application.Export.Interfaces;
 
 namespace Nfc.Infra.HangFire.Jobs
 {
@@ -11,19 +12,22 @@ namespace Nfc.Infra.HangFire.Jobs
         private readonly ICorrelationContext _ctx;
         private readonly IExportStatusNotifier _notifier;
         private readonly IExportStatusRepository _repository;
+        private readonly IExportFileStorage _fileStorage;
 
         public ExportJob(
             IExportNotasFiscalService service,
             IApplicationLogging logger,
             ICorrelationContext ctx,
             IExportStatusNotifier notifier,
-            IExportStatusRepository repository)
+            IExportStatusRepository repository,
+            IExportFileStorage fileStorage)
         {
             _service = service;
             _logger = logger;
             _ctx = ctx;
             _notifier = notifier;
             _repository = repository;
+            _fileStorage = fileStorage;
         }
 
         public async Task ExecutarAsync(ExportType type, long[] ids, Guid correlationId, Hangfire.Server.PerformContext context, CancellationToken cancellationToken)
@@ -45,6 +49,10 @@ namespace Nfc.Infra.HangFire.Jobs
             try
             {
                 var bytes = await _service.ExportAsync(type, ids.ToList(), cancellationToken);
+                using (var ms = new MemoryStream(bytes))
+                {
+                    await _fileStorage.SaveAsync(_ctx.JobId ?? string.Empty, type, ms, cancellationToken);
+                }
 
 
                 var duration = (DateTime.UtcNow - start).TotalMilliseconds;
@@ -56,7 +64,8 @@ namespace Nfc.Infra.HangFire.Jobs
                     State = ExportJobState.Completed,
                     Type = type,
                     Ids = ids,
-                    DurationMs = duration
+                    DurationMs = duration,
+                    FileUrl = await _fileStorage.GetPublicUrlAsync(_ctx.JobId ?? string.Empty, type, cancellationToken: cancellationToken) ?? $"/api/export/file/{_ctx.JobId}"
                 };
                 await _repository.SaveAsync(completedStatus, cancellationToken);
                 await _notifier.NotifyAsync(completedStatus, cancellationToken);

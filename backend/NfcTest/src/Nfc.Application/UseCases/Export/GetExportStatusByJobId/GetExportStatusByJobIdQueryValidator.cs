@@ -1,4 +1,4 @@
-﻿using FluentValidation;
+using FluentValidation;
 
 namespace Nfc.Application.UseCases.Export.GetExportStatusByJobId
 {
@@ -6,7 +6,7 @@ namespace Nfc.Application.UseCases.Export.GetExportStatusByJobId
     {
         public GetExportStatusByJobIdQueryValidator()
         {
-            RuleFor(x => x.JobId)
+            RuleFor(x => x.JobIdQuery)
                 .NotNull()
                 .NotEmpty();
         }

@@ -26,6 +26,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "env", "env", "{02EA681E-C7D
 		src\Nfc.Api\docker-compose.yml = src\Nfc.Api\docker-compose.yml
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nfc.Infra.Storage", "src\Nfc.Infra.Storage\Nfc.Infra.Storage.csproj", "{C15075D4-1D22-4DB5-9894-24D44AFF5416}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -68,6 +70,10 @@ Global
 		{5C8E53D7-6BC7-4ADB-B65A-4F619D710200}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5C8E53D7-6BC7-4ADB-B65A-4F619D710200}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5C8E53D7-6BC7-4ADB-B65A-4F619D710200}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C15075D4-1D22-4DB5-9894-24D44AFF5416}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C15075D4-1D22-4DB5-9894-24D44AFF5416}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C15075D4-1D22-4DB5-9894-24D44AFF5416}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C15075D4-1D22-4DB5-9894-24D44AFF5416}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

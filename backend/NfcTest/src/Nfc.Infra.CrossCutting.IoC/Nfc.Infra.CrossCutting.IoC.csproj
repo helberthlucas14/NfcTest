@@ -18,6 +18,7 @@
     <ProjectReference Include="..\Nfc.Infra.Data.EF\Nfc.Infra.Data.EF.csproj" />
     <ProjectReference Include="..\Nfc.Infra.Data.Redis\Nfc.Infra.Data.Redis.csproj" />
     <ProjectReference Include="..\Nfc.Infra.HangFire\Nfc.Infra.HangFire.csproj" />
+    <ProjectReference Include="..\Nfc.Infra.Storage\Nfc.Infra.Storage.csproj" />
   </ItemGroup>
 
 </Project>

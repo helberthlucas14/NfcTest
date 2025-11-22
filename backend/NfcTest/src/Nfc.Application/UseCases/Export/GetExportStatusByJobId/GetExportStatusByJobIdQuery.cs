@@ -1,4 +1,4 @@
-﻿using Nfc.Application.Export;
+using Nfc.Application.Export;
 using Nfc.Application.UseCases.Base;
 using System;
 using System.Collections.Generic;
@@ -10,6 +10,6 @@ namespace Nfc.Application.UseCases.Export.GetExportStatusByJobId
 {
     public class GetExportStatusByJobIdQuery : CommandRequestBase<ExportStatus>
     {
-        public Guid JobIdQuery { get; set; }
+        public string JobIdQuery { get; set; } = string.Empty;
     }
 }

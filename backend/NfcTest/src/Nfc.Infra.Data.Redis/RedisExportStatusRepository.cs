@@ -1,6 +1,5 @@
 using FC.Codeflix.Catalog.Application.Exceptions;
 using Nfc.Application.Export;
-using Nfc.Domain.Entity;
 using StackExchange.Redis;
 using System.Text.Json;
 
@@ -23,7 +22,7 @@ namespace Nfc.Infra.Data.Redis
             await db.StringSetAsync(key, json);
         }
 
-        public async Task<ExportStatus?> GetAsync(Guid jobId, CancellationToken cancellationToken)
+        public async Task<ExportStatus?> GetAsync(string jobId, CancellationToken cancellationToken)
         {
             var db = _connection.GetDatabase();
             var key = $"export:status:{jobId}";

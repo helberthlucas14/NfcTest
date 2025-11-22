@@ -17,6 +17,7 @@ namespace Nfc.Application.Export
         public required long[] Ids { get; init; }
         public double? DurationMs { get; init; }
         public string? Error { get; init; }
+        public string? FileUrl { get; init; }
         public DateTime OccurredAtUtc { get; init; } = DateTime.UtcNow;
     }
 }

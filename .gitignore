@@ -363,3 +363,4 @@ MigrationBackup/
 FodyWeavers.xsd
 /data/cache
 /frontend/NfcTest/.vscode
+/backend/NfcTest/src/Nfc.Api/exports
