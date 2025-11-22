@@ -4,9 +4,6 @@ using Microsoft.AspNetCore.Mvc;
 using Nfc.Application.Export;
 using Nfc.Application.UseCases.Export.ExportNotaFiscal;
 using Nfc.Application.UseCases.Export.GetExportStatusByJobId;
-using Nfc.Application.UseCases.NotaFiscal.Common;
-using Nfc.Infra.HangFire.Jobs;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace Nfc.Api.Controllers
 {
