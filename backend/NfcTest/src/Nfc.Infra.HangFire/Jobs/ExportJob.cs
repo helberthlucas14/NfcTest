@@ -2,6 +2,8 @@ using Nfc.Application.Export;
 using Nfc.Application.Logging;
 using Nfc.Application.Services;
 using Nfc.Application.Export.Interfaces;
+using StackExchange.Redis;
+using System.Linq;
 
 namespace Nfc.Infra.HangFire.Jobs
 {
@@ -13,6 +15,7 @@ namespace Nfc.Infra.HangFire.Jobs
         private readonly IExportStatusNotifier _notifier;
         private readonly IExportStatusRepository _repository;
         private readonly IExportFileStorage _fileStorage;
+        private readonly IConnectionMultiplexer _connection;
 
         public ExportJob(
             IExportNotasFiscalService service,
@@ -20,7 +23,8 @@ namespace Nfc.Infra.HangFire.Jobs
             ICorrelationContext ctx,
             IExportStatusNotifier notifier,
             IExportStatusRepository repository,
-            IExportFileStorage fileStorage)
+            IExportFileStorage fileStorage,
+            IConnectionMultiplexer connection)
         {
             _service = service;
             _logger = logger;
@@ -28,12 +32,15 @@ namespace Nfc.Infra.HangFire.Jobs
             _notifier = notifier;
             _repository = repository;
             _fileStorage = fileStorage;
+            _connection = connection;
         }
 
         public async Task ExecutarAsync(ExportType type, long[] ids, Guid correlationId, Hangfire.Server.PerformContext context, CancellationToken cancellationToken)
         {
             _ctx.CorrelationId = correlationId;
             _ctx.JobId = context?.BackgroundJob?.Id;
+            var db = _connection.GetDatabase();
+            var dedupKey = BuildDedupKey(type, ids);
             var start = DateTime.UtcNow;
             _logger.LogStarted(correlationId, nameof(ExecutarAsync), _ctx.JobId);
             var startedStatus = new ExportStatus
@@ -69,6 +76,7 @@ namespace Nfc.Infra.HangFire.Jobs
                 };
                 await _repository.SaveAsync(completedStatus, cancellationToken);
                 await _notifier.NotifyAsync(completedStatus, cancellationToken);
+                await db.KeyDeleteAsync(dedupKey);
             }
             catch (Exception ex)
             {
@@ -86,8 +94,15 @@ namespace Nfc.Infra.HangFire.Jobs
                 };
                 await _repository.SaveAsync(failedStatus, cancellationToken);
                 await _notifier.NotifyAsync(failedStatus, cancellationToken);
+                await db.KeyDeleteAsync(dedupKey);
                 throw;
             }
+        }
+
+        private static string BuildDedupKey(ExportType type, long[] ids)
+        {
+            var normalized = string.Join('-', ids.OrderBy(x => x));
+            return $"export:dedup:{type}:{normalized}";
         }
     }
 }

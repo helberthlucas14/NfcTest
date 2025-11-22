@@ -2,6 +2,8 @@ using Hangfire;
 using Nfc.Application.Export;
 using Nfc.Application.Logging;
 using Nfc.Application.Services;
+using StackExchange.Redis;
+using System.Linq;
 
 namespace Nfc.Infra.HangFire.Jobs
 {
@@ -11,13 +13,17 @@ namespace Nfc.Infra.HangFire.Jobs
         private readonly IApplicationLogging _logger;
         private readonly IExportStatusNotifier _notifier;
         private readonly IExportStatusRepository _repository;
+        private readonly IConnectionMultiplexer _connection;
+        private static readonly TimeSpan DedupExpiry = TimeSpan.FromHours(1);
+        private static readonly TimeSpan LockTimeout = TimeSpan.FromSeconds(5);
 
-        public ExportScheduler(ICorrelationContext ctx, IApplicationLogging logger, IExportStatusNotifier notifier, IExportStatusRepository repository)
+        public ExportScheduler(ICorrelationContext ctx, IApplicationLogging logger, IExportStatusNotifier notifier, IExportStatusRepository repository, IConnectionMultiplexer connection)
         {
             _ctx = ctx;
             _logger = logger;
             _notifier = notifier;
             _repository = repository;
+            _connection = connection;
         }
 
         public async Task<string> ScheduleExportAsync(ExportType type, long[] ids, CancellationToken cancellationToken)
@@ -26,26 +32,81 @@ namespace Nfc.Infra.HangFire.Jobs
             _ctx.CorrelationId = correlationId;
 
             _logger.LogStarted(correlationId, nameof(ScheduleExportAsync));
+            var db = _connection.GetDatabase();
+            var dedupKey = BuildDedupKey(type, ids);
+            var lockKey = dedupKey + ":lock";
+            var token = Guid.NewGuid().ToString("N");
 
-            var jobId = BackgroundJob.Enqueue<ExportJob>(
-                job => job.ExecutarAsync(type, ids, correlationId, null!, cancellationToken)
-            );
-
-            _ctx.JobId = jobId;
-            _logger.LogCompleted(correlationId, nameof(ScheduleExportAsync), 0, jobId);
-
-            var status = new ExportStatus
+            var existingBeforeLock = await TryGetExistingJobIdAsync(db, dedupKey);
+            if (existingBeforeLock is not null)
             {
-                JobId = jobId,
-                CorrelationId = correlationId,
-                State = ExportJobState.Queued,
-                Type = type,
-                Ids = ids
-            };
-            await _repository.SaveAsync(status, cancellationToken);
-            await _notifier.NotifyAsync(status, cancellationToken);
+                _ctx.JobId = existingBeforeLock;
+                _logger.LogCompleted(correlationId, nameof(ScheduleExportAsync), 0, existingBeforeLock);
+                return existingBeforeLock;
+            }
 
-            return await Task.FromResult(jobId);
+            var lockTaken = await db.LockTakeAsync(lockKey, token, LockTimeout);
+            if (!lockTaken)
+            {
+                var existing = await TryGetExistingJobIdAsync(db, dedupKey);
+                if (existing is not null)
+                {
+                    _ctx.JobId = existing;
+                    _logger.LogCompleted(correlationId, nameof(ScheduleExportAsync), 0, existing);
+                    return existing;
+                }
+            }
+            try
+            {
+                var existing = await TryGetExistingJobIdAsync(db, dedupKey);
+                if (existing is not null)
+                {
+                    _ctx.JobId = existing;
+                    _logger.LogCompleted(correlationId, nameof(ScheduleExportAsync), 0, existing);
+                    return existing;
+                }
+
+                var jobId = BackgroundJob.Enqueue<ExportJob>(
+                    job => job.ExecutarAsync(type, ids, correlationId, null!, cancellationToken)
+                );
+
+                await db.StringSetAsync(dedupKey, jobId, DedupExpiry, When.NotExists);
+
+                _ctx.JobId = jobId;
+                _logger.LogCompleted(correlationId, nameof(ScheduleExportAsync), 0, jobId);
+
+                var status = new ExportStatus
+                {
+                    JobId = jobId,
+                    CorrelationId = correlationId,
+                    State = ExportJobState.Queued,
+                    Type = type,
+                    Ids = ids
+                };
+                await _repository.SaveAsync(status, cancellationToken);
+                await _notifier.NotifyAsync(status, cancellationToken);
+
+                return jobId;
+            }
+            finally
+            {
+                if (lockTaken)
+                {
+                    await db.LockReleaseAsync(lockKey, token);
+                }
+            }
+        }
+
+        private static string BuildDedupKey(ExportType type, long[] ids)
+        {
+            var normalized = string.Join('-', ids.OrderBy(x => x));
+            return $"export:dedup:{type}:{normalized}";
+        }
+
+        private static async Task<string?> TryGetExistingJobIdAsync(IDatabase db, string dedupKey)
+        {
+            var value = await db.StringGetAsync(dedupKey);
+            return value.HasValue ? value.ToString() : null;
         }
     }
 }
