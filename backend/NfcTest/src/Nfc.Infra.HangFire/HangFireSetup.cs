@@ -1,4 +1,5 @@
-﻿using Hangfire;
+using Hangfire;
+using Hangfire.Dashboard;
 using Hangfire.Redis.StackExchange;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
@@ -33,8 +34,16 @@ namespace Nfc.Infra.HangFire
         public static IApplicationBuilder UseHangfireDashboardUI(
             this IApplicationBuilder app)
         {
-            app.UseHangfireDashboard("/hangfire");
+            app.UseHangfireDashboard("/hangfire", new DashboardOptions
+            {
+                Authorization = new[] { new AllowAllDashboardAuthorizationFilter() }
+            });
             return app;
+        }
+
+        private sealed class AllowAllDashboardAuthorizationFilter : IDashboardAuthorizationFilter
+        {
+            public bool Authorize(DashboardContext context) => true;
         }
     }
 }
