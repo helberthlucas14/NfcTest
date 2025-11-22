@@ -1,14 +1,11 @@
 <mat-toolbar color="primary" class="px-4">
   <span>Notas Fiscais</span>
   <span class="flex-1"></span>
-  <button mat-raised-button color="accent">Nova Nota Fiscal</button>
-
+  <button mat-raised-button color="accent"  (click)="novaNota()">Nova Nota Fiscal</button>
 </mat-toolbar>
 
-<mat-progress-bar *ngIf="isExporting" mode="indeterminate" color="accent"></mat-progress-bar>
-
 <mat-card class="m-4">
-  <table mat-table [dataSource]="notas" class="mat-elevation-z1 w-full">
+  <table mat-table [dataSource]="dataSource" class="mat-elevation-z1 w-full">
 
     <ng-container matColumnDef="select">
       <th mat-header-cell *matHeaderCellDef> Sel. </th>
@@ -16,7 +13,7 @@
         <mat-checkbox [checked]="isSelected(n.id)" (change)="toggleRow(n.id, $event.checked)"></mat-checkbox>
       </td>
     </ng-container>
-    
+
     <ng-container matColumnDef="id">
       <th mat-header-cell *matHeaderCellDef> IdNota </th>
       <td mat-cell *matCellDef="let n"> {{ n.id }} </td>

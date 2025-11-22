@@ -2,16 +2,16 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable, map } from 'rxjs';
 import { environment } from '../../environments/environment';
-import { NotaFiscal, PaginatedResponse } from './models';
+import { CreateNotaRequest, NotaFiscal, PaginatedResponse } from './models';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ApiService {
-    private http = inject(HttpClient);
-    private baseUrl = environment.apiBaseUrl.replace(/\/$/, '');
+  private http = inject(HttpClient);
+  private baseUrl = environment.apiBaseUrl.replace(/\/$/, '');
 
-      listNotas(pageNumber?: number, pageSize?: number): Observable<PaginatedResponse<NotaFiscal>> {
+  listNotas(pageNumber?: number, pageSize?: number): Observable<PaginatedResponse<NotaFiscal>> {
     const params: Record<string, any> = {};
     if (pageNumber) params['pageNumber'] = pageNumber;
     if (pageSize) params['pageSize'] = pageSize;
@@ -29,5 +29,9 @@ export class ApiService {
           }))
         }))
       );
+  }
+
+   createNota(req: CreateNotaRequest): Observable<NotaFiscal> {
+    return this.http.post<NotaFiscal>(`${this.baseUrl}/NotaFiscal`, req);
   }
 }

@@ -11,6 +11,7 @@ html {
     color: (
       primary: mat.$azure-palette,
       tertiary: mat.$blue-palette,
+      error: mat.$red-palette,
     ),
     typography: Roboto,
     density: 0,
@@ -32,4 +33,31 @@ body {
 
   // Reset the user agent margin.
   margin: 0;
+
+  --brand-primary: var(--mat-sys-primary);
+  --brand-on-primary: var(--mat-sys-on-primary);
+
+  --brand-secondary: var(--mat-sys-secondary);
+  --brand-on-secondary: var(--mat-sys-on-secondary);
+
+  --brand-tertiary: var(--mat-sys-tertiary);
+  --brand-on-tertiary: var(--mat-sys-on-tertiary);
+
+  --brand-warn: var(--mat-sys-error);
+  --brand-on-warn: var(--mat-sys-on-error);
+}
+
+.mat-toolbar.mat-primary {
+  --mat-toolbar-container-background-color: var(--mat-sys-primary);
+  --mat-toolbar-container-text-color: var(--mat-sys-on-primary);
+}
+
+.mat-toolbar.mat-accent {
+  --mat-toolbar-container-background-color: var(--mat-sys-secondary);
+  --mat-toolbar-container-text-color: var(--mat-sys-on-secondary);
+}
+
+.mat-toolbar.mat-warn {
+  --mat-toolbar-container-background-color: var(--mat-sys-error);
+  --mat-toolbar-container-text-color: var(--mat-sys-on-error);
 }
