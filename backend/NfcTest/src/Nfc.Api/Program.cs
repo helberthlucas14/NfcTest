@@ -4,7 +4,7 @@ using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+builder.Services.AddSignalR();
 
 builder.Services
     .RegisterServices(builder.Configuration)
@@ -13,6 +13,8 @@ builder.Services
     .AddControllers()
 
     ;
+
+builder.Services.AddScoped<Nfc.Application.Export.IExportStatusNotifier, Nfc.Api.Notifications.SignalRExportStatusNotifier>();
 
 builder.Services
     .AddCors(p => p.AddPolicy("CORS", builder =>
@@ -41,6 +43,7 @@ app.UseAuthorization();
 app.UseHangfireDashboardUI();
 
 app.MapControllers();
+app.MapHub<Nfc.Api.Hubs.ExportStatusHub>("/hubs/export-status");
 
 app.Run();
 

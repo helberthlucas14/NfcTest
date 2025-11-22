@@ -1,4 +1,4 @@
-﻿using FluentValidation;
+using FluentValidation;
 
 namespace Nfc.Application.UseCases.ExportNotaFiscal
 {
@@ -11,8 +11,11 @@ namespace Nfc.Application.UseCases.ExportNotaFiscal
                 .IsInEnum();
 
             RuleFor(x => x.Ids)
-               .Must(collection => collection == null || !collection.Any())
-               .WithMessage("Ids not be empty or null.");
+                .NotNull()
+                .Must(collection => collection.Any())
+                .WithMessage("Ids not be null or empty;")
+                .Must(collection => collection.All(id => id > 0))
+                .WithMessage("Ids should be greater than 0.");
         }
     }
 }

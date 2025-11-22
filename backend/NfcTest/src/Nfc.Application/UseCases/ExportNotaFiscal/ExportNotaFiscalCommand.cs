@@ -1,9 +1,9 @@
-﻿using Nfc.Application.Export;
+using Nfc.Application.Export;
 using Nfc.Application.UseCases.Base;
 
 namespace Nfc.Application.UseCases.ExportNotaFiscal
 {
-    public class ExportNotaFiscalCommand : CommandRequestBase<long>
+    public class ExportNotaFiscalCommand : CommandRequestBase<string>
     {
         public ExportType Type { get; set; }
         public long[] Ids { get; set; } = [];

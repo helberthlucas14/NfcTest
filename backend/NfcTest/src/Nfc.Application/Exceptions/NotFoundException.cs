@@ -13,5 +13,13 @@
             if (@object is null)
                 throw new NotFoundException(exceptionMessage);
         }
+
+        public static void ThrowIfCondition(
+           bool condition,
+           string exceptionMessage)
+        {
+            if (condition)
+                throw new NotFoundException(exceptionMessage);
+        }
     }
 }

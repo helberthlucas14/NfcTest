@@ -1,4 +1,4 @@
-﻿using MediatR;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -8,6 +8,7 @@ using Nfc.Application.Export.Exporters;
 using Nfc.Application.Export.Interfaces;
 using Nfc.Application.Logging;
 using Nfc.Application.Services;
+using Nfc.Application.UseCases.ExportNotaFiscal;
 using Nfc.Application.UseCases.NotaFiscal.Common;
 using Nfc.Application.UseCases.NotaFiscal.CriarNotaFiscal;
 using Nfc.Application.UseCases.NotaFiscal.DeleteById;
@@ -20,6 +21,8 @@ using Nfc.Infra.Data.EF;
 using Nfc.Infra.Data.EF.Repositories;
 using Nfc.Infra.HangFire;
 using Nfc.Infra.HangFire.Jobs;
+using Nfc.Infra.Data.Redis;
+using StackExchange.Redis;
 
 namespace Nfc.Infra.CrossCutting.IoC
 {
@@ -38,7 +41,9 @@ namespace Nfc.Infra.CrossCutting.IoC
             IConfiguration configuration)
         {
             AddAppConections(services, configuration);
+
             services.AddScoped<INotaFiscalRepository, NotaFiscalRepository>();
+            services.AddScoped<IExportStatusRepository, RedisExportStatusRepository>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 
@@ -53,12 +58,14 @@ namespace Nfc.Infra.CrossCutting.IoC
             services.AddScoped<ExportJob>();
 
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(LoggingBehavior<,>));
+            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(CorrelationIdBehavior<,>));
             return services;
         }
 
         private static IServiceCollection AddAppConections(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddSqlDbRegistration(configuration);
+            services.AddRedisDbRegistration(configuration);
             services.AddHangfireInfrastructure(configuration);
             services.AddHttpLogging(logging =>
             {
@@ -82,6 +89,17 @@ namespace Nfc.Infra.CrossCutting.IoC
             return services;
         }
 
+        private static IServiceCollection AddRedisDbRegistration(
+         this IServiceCollection services,
+        IConfiguration configuration
+    )
+        {
+            var redisConnection = configuration.GetConnectionString("RedisDb");
+            ArgumentNullException.ThrowIfNull(redisConnection);
+            services.AddSingleton<IConnectionMultiplexer>(_ => ConnectionMultiplexer.Connect(redisConnection));
+            return services;
+        }
+
         private static IServiceCollection RegisterDomainServices(this IServiceCollection services)
         {
 
@@ -98,6 +116,7 @@ namespace Nfc.Infra.CrossCutting.IoC
             services.AddScoped<IRequestHandler<UpdateNotaFiscalCommand, NotaFiscalResponse>, UpdateNotaFiscalCommandHandler>();
             services.AddScoped<IRequestHandler<GetAllQuery, PagedList<NotaFiscalResponse>>, GetAllQueryHandler>();
             services.AddScoped<IRequestHandler<DeleteByIdCommand, Unit>, DeleteByIdCommandHandler>();
+            services.AddScoped<IRequestHandler<ExportNotaFiscalCommand, string>, ExportNotaFiscalCommandHandler>();
 
 
             return services;
