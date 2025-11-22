@@ -1,7 +1,7 @@
 using MediatR;
 using Nfc.Application.Services;
 
-namespace Nfc.Application.UseCases.ExportNotaFiscal
+namespace Nfc.Application.UseCases.Export.ExportNotaFiscal
 {
     public class ExportNotaFiscalCommandHandler : IRequestHandler<ExportNotaFiscalCommand, string>
     {

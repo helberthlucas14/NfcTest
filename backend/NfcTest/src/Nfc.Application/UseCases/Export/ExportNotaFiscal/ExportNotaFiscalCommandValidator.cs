@@ -1,6 +1,6 @@
 using FluentValidation;
 
-namespace Nfc.Application.UseCases.ExportNotaFiscal
+namespace Nfc.Application.UseCases.Export.ExportNotaFiscal
 {
     public class ExportNotaFiscalCommandValidator
         : AbstractValidator<ExportNotaFiscalCommand>

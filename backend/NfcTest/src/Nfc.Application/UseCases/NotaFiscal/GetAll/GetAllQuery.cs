@@ -27,8 +27,9 @@ namespace Nfc.Application.UseCases.NotaFiscal.GetAll
 
             var mappedResult = result.Select(NotaFiscalResponse.FromMember).ToList();
 
-            return await Task.FromResult(PagedList<NotaFiscalResponse>.ToPagedList(
+            return await Task.FromResult(new PagedList<NotaFiscalResponse>(
                 mappedResult,
+                result.TotalRecords,
                 request.parameters.PageNumber,
                 request.parameters.PageSize));
         }

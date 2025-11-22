@@ -8,7 +8,6 @@ using Nfc.Application.Export.Exporters;
 using Nfc.Application.Export.Interfaces;
 using Nfc.Application.Logging;
 using Nfc.Application.Services;
-using Nfc.Application.UseCases.ExportNotaFiscal;
 using Nfc.Application.UseCases.NotaFiscal.Common;
 using Nfc.Application.UseCases.NotaFiscal.CriarNotaFiscal;
 using Nfc.Application.UseCases.NotaFiscal.DeleteById;
@@ -23,6 +22,8 @@ using Nfc.Infra.HangFire;
 using Nfc.Infra.HangFire.Jobs;
 using Nfc.Infra.Data.Redis;
 using StackExchange.Redis;
+using Nfc.Application.UseCases.Export.ExportNotaFiscal;
+using Nfc.Application.UseCases.Export.GetExportStatusByJobId;
 
 namespace Nfc.Infra.CrossCutting.IoC
 {
@@ -117,6 +118,7 @@ namespace Nfc.Infra.CrossCutting.IoC
             services.AddScoped<IRequestHandler<GetAllQuery, PagedList<NotaFiscalResponse>>, GetAllQueryHandler>();
             services.AddScoped<IRequestHandler<DeleteByIdCommand, Unit>, DeleteByIdCommandHandler>();
             services.AddScoped<IRequestHandler<ExportNotaFiscalCommand, string>, ExportNotaFiscalCommandHandler>();
+            services.AddScoped<IRequestHandler<GetExportStatusByJobIdQuery, ExportStatus>, GetExportStatusByJobIdQueryHandler>();
 
 
             return services;

@@ -19,15 +19,18 @@ namespace Nfc.Infra.Data.EF.Repositories
         public async Task<PagedList<NotaFiscal>> GetAllAsync(NotaFiscalQueryStringParameters parameters,
             CancellationToken cancellationToken)
         {
-            var allNotas = await _context.NotasFiscais
-                    .Include(n => n.Items)
-                    .Skip((parameters.PageNumber - 1) * parameters.PageSize)
-                    .Take(parameters.PageSize)
-                    .ToListAsync(cancellationToken);
+            var query = _notas
+                .Include(n => n.Items)
+                .AsNoTracking();
 
-            var pagedNotas = PagedList<NotaFiscal>.ToPagedList(allNotas, parameters.PageNumber, parameters.PageSize);
+            var totalRecords = await query.CountAsync(cancellationToken);
 
-            return pagedNotas;
+            var items = await query
+                .Skip((parameters.PageNumber - 1) * parameters.PageSize)
+                .Take(parameters.PageSize)
+                .ToListAsync(cancellationToken);
+
+            return new PagedList<NotaFiscal>(items, totalRecords, parameters.PageNumber, parameters.PageSize);
         }
 
         public async Task<NotaFiscal> AddAsync(NotaFiscal entity, CancellationToken cancellationToken)
