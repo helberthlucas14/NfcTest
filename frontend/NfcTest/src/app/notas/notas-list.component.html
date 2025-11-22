@@ -41,13 +41,32 @@
     <ng-container matColumnDef="acoes">
       <th mat-header-cell *matHeaderCellDef> </th>
       <td mat-cell *matCellDef="let n">
-        <button mat-button color="primary" >[Editar]</button>
-        <button mat-button color="warn" >[Excluir]</button>
+        <button mat-button color="primary" (click)="editar(n)">[Editar]</button>
+        <button mat-button color="warn" (click)="excluir(n)">[Excluir]</button>
       </td>
     </ng-container>
 
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
     <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
   </table>
+    <mat-paginator
+    [length]="meta?.total || 0"
+    [pageSize]="pageSize"
+    [pageIndex]="(meta?.currentPage || 1) - 1"
+    [pageSizeOptions]="[10, 20, 50]"
+    (page)="onPage($event)">
+  </mat-paginator>
 </mat-card>
+<div class="acoes-export">
+  <div class="selecoes" style="display:flex; align-items:center; gap:8px;">
+    <span>Selecionados: {{ selectedIds.size }}</span>
+    <button mat-stroked-button (click)="selectAllCurrentPage()">Selecionar todos</button>
+    <button mat-button (click)="clearSelection()">Limpar seleção</button>
+  </div>
+  <div class="export-buttons" style="display:flex; justify-content:center; gap:12px; flex-wrap:wrap; margin-top:8px;">
+    <button mat-raised-button>Exportar TXT</button>
+    <button mat-raised-button color="primary">Exportar JSON</button>
+  </div>
+</div>
+
 

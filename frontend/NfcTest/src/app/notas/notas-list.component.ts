@@ -76,7 +76,26 @@ export class NotasListComponent {
         });
     }
 
-    isSelected(id: number): boolean {
+      editar(nota: NotaFiscal) {
+    const ref = this.dialog.open(EditNotaDialogComponent, { data: { nota } });
+    ref.afterClosed().subscribe(result => {
+      if (!result) return;
+      const req = { emissor: result.emissor, dataEmissao: result.dataEmissao, items: result.items || [] };
+      this.api.updateNota(nota.id, req).subscribe({
+        next: () => { this.snack.open('Nota atualizada', 'OK', { duration: 2000 }); this.load(1); },
+        error: () => this.snack.open('Erro ao atualizar nota', 'OK', { duration: 3000 })
+      });
+    });
+  }
+
+  excluir(nota: NotaFiscal) {
+    this.api.deleteNota(nota.id).subscribe({
+      next: () => { this.snack.open('Nota excluída', 'OK', { duration: 2000 }); this.load(1); },
+      error: () => this.snack.open('Erro ao excluir nota', 'OK', { duration: 3000 })
+    });
+  }
+
+  isSelected(id: number): boolean {
         return this.selectedIds.has(id);
     }
 

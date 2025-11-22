@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable, map } from 'rxjs';
 import { environment } from '../../environments/environment';
-import { CreateNotaRequest, NotaFiscal, PaginatedResponse } from './models';
+import { CreateNotaRequest, NotaFiscal, PaginatedResponse, UpdateNotaRequest } from './models';
 
 @Injectable({
   providedIn: 'root',
@@ -34,4 +34,13 @@ export class ApiService {
    createNota(req: CreateNotaRequest): Observable<NotaFiscal> {
     return this.http.post<NotaFiscal>(`${this.baseUrl}/NotaFiscal`, req);
   }
+
+    updateNota(id: number, req: UpdateNotaRequest): Observable<void> {
+    return this.http.put<void>(`${this.baseUrl}/NotaFiscal/${id}`, req);
+  }
+
+    deleteNota(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.baseUrl}/NotaFiscal/${id}`);
+  }
+
 }
