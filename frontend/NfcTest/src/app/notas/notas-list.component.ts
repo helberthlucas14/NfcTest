@@ -16,6 +16,7 @@ import { Router, RouterModule } from '@angular/router';
 import { ApiService } from '../core/api.service';
 import { NotaFiscal, ApiMeta } from '../core/models';
 import { EditNotaDialogComponent } from './edit-nota-dialog.component';
+import { finalize } from 'rxjs';
 
 @Component({
     selector: 'app-notas-list',
@@ -39,7 +40,7 @@ export class NotasListComponent {
     private api = inject(ApiService);
     private dialog = inject(MatDialog);
     private snack = inject(MatSnackBar);
-
+    private router = inject(Router);
 
     displayedColumns = ['select', 'id', 'emissor', 'data', 'valor', 'acoes'];
     dataSource = new MatTableDataSource<NotaFiscal>([]);
@@ -116,4 +117,34 @@ export class NotasListComponent {
         const items = n.itens || [];
         return items.reduce((sum, i) => sum + (i.valor || 0), 0);
     }
+
+      exportTxt() {
+    const ids = Array.from(this.selectedIds);
+    if (ids.length === 0) {
+      this.snack.open('Selecione ao menos uma nota para exportar', 'OK', { duration: 2500 });
+      return;
+    }
+    this.isExporting = true;
+    this.api.export('text', ids)
+      .pipe(finalize(() => { this.isExporting = false; }))
+      .subscribe({
+        next: (resp) => { this.snack.open(`Exportação TXT iniciada (job ${resp.jobId}, cid ${resp.correlationId})`, 'OK', { duration: 2500 }); this.router.navigate(['/exports/status', resp.jobId]); },
+        error: () => this.snack.open('Erro ao iniciar exportação TXT', 'OK', { duration: 3000 })
+      });
+  }
+
+  exportJson() {
+    const ids = Array.from(this.selectedIds);
+    if (ids.length === 0) {
+      this.snack.open('Selecione ao menos uma nota para exportar', 'OK', { duration: 2500 });
+      return;
+    }
+    this.isExporting = true;
+    this.api.export('json', ids)
+      .pipe(finalize(() => { this.isExporting = false; }))
+      .subscribe({
+        next: (resp) => { this.snack.open(`Exportação JSON iniciada (job ${resp.jobId}, cid ${resp.correlationId})`, 'OK', { duration: 2500 }); this.router.navigate(['/exports/status', resp.jobId]); },
+        error: () => this.snack.open('Erro ao iniciar exportação JSON', 'OK', { duration: 3000 })
+      });
+  }
 }

@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable, map } from 'rxjs';
 import { environment } from '../../environments/environment';
-import { CreateNotaRequest, NotaFiscal, PaginatedResponse, UpdateNotaRequest } from './models';
+import { CreateNotaRequest, ExportStartResponse, NotaFiscal, PaginatedResponse, UpdateNotaRequest, ExportStatus } from './models';
 
 @Injectable({
   providedIn: 'root',
@@ -41,6 +41,17 @@ export class ApiService {
 
     deleteNota(id: number): Observable<void> {
     return this.http.delete<void>(`${this.baseUrl}/NotaFiscal/${id}`);
+  }
+
+    export(type: 'text' | 'json', noteIds: number[] = []): Observable<ExportStartResponse> {
+    const normalized = type.toLowerCase();
+    const enumValue = normalized === 'text' ? 0 : 1;
+    const body = { type: enumValue, ids: noteIds } as any;
+    return this.http.post<ExportStartResponse>(`${this.baseUrl}/export`, body);
+  }
+
+    getExport(jobId: string): Observable<ExportStatus> {
+    return this.http.get<ExportStatus>(`${this.baseUrl}/export/status/${jobId}`);
   }
 
 }

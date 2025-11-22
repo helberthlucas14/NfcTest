@@ -1,0 +1,44 @@
+<mat-toolbar color="primary" class="px-4">
+  <button mat-icon-button (click)="goBack()" color="accent" aria-label="Voltar">
+    <mat-icon style="color:#fff">arrow_back</mat-icon>
+  </button>
+  <span class="ml-2 text-lg font-semibold">Status da exportação</span>
+  <span class="flex-1"></span>
+</mat-toolbar>
+
+<mat-card class="m-4">
+  @if (jobId) {
+    <p>Job: <strong>{{ jobId }}</strong></p>
+    <button mat-stroked-button color="primary" (click)="refresh()">Atualizar status</button>
+
+    <div class="mt-2 space-y-1 text-sm">
+      <p>Status atual: <span class="font-medium">{{ stateLabel(status?.state) }}</span></p>
+      <p>Formato: <span class="font-medium">{{ typeLabel(status?.type) }}</span></p>
+      <p>IDs: <span class="font-medium">{{ status?.ids?.join(', ') ?? '-' }}</span></p>
+      <p>Duração (ms): <span class="font-medium">{{ status?.durationMs ?? '-' }}</span></p>
+
+      <p>Arquivo:
+        @if (status?.fileUrl) {
+          <a [href]="downloadUrl()" download class="text-blue-600 hover:underline">Baixar</a>
+        } @else {
+          -
+        }
+      </p>
+
+      <p>Erro: <span class="font-medium">{{ status?.error ?? '-' }}</span></p>
+      <p>CorrelationId: <span class="font-mono">{{ status?.correlationId ?? '-' }}</span></p>
+      <p>Ocorrido em (UTC): <span class="font-medium">{{ status?.occurredAtUtc ?? '-' }}</span></p>
+    </div>
+
+    <h3 class="mt-3 text-base font-semibold">Eventos em tempo real</h3>
+
+    <mat-list class="max-h-64 overflow-auto">
+      @for (e of events; track $index) {
+        <mat-list-item>{{ e }}</mat-list-item>
+      }
+    </mat-list>
+
+  } @else {
+    <p class="text-sm">Nenhum job informado.</p>
+  }
+</mat-card>

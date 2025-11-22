@@ -64,8 +64,8 @@
     <button mat-button (click)="clearSelection()">Limpar seleção</button>
   </div>
   <div class="export-buttons" style="display:flex; justify-content:center; gap:12px; flex-wrap:wrap; margin-top:8px;">
-    <button mat-raised-button>Exportar TXT</button>
-    <button mat-raised-button color="primary">Exportar JSON</button>
+  <button mat-raised-button (click)="exportTxt()">Exportar TXT</button>
+  <button mat-raised-button color="primary" (click)="exportJson()">Exportar JSON</button>
   </div>
 </div>
 
