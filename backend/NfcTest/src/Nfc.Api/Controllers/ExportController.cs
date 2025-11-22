@@ -26,7 +26,7 @@ namespace Nfc.Api.Controllers
             CancellationToken cancellationToken)
         {
             var jobId = await _mediator.Send(command, cancellationToken);
-            return Accepted(new { jobId });
+            return Accepted(new { jobId, correlationId = command.CorrelationId });
         }
 
         [HttpGet("status/{jobId}")]

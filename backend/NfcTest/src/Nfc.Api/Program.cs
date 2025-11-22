@@ -1,4 +1,5 @@
 using Nfc.Infra.CrossCutting.IoC;
+using Nfc.Infra.CrossCutting.Commons.Middlewares;
 using Nfc.Infra.HangFire;
 using Scalar.AspNetCore;
 
@@ -37,6 +38,9 @@ if (app.Environment.IsDevelopment())
 app.UseCors("CORS");
 
 //app.UseHttpsRedirection();
+
+app.UseMiddleware<CorrelationIdMiddleware>();
+app.UseHttpLogging();
 
 app.UseAuthorization();
 

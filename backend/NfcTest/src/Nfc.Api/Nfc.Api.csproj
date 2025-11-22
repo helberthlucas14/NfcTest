@@ -22,6 +22,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Nfc.Application\Nfc.Application.csproj" />
     <ProjectReference Include="..\Nfc.Infra.CrossCutting.IoC\Nfc.Infra.CrossCutting.IoC.csproj" />
+    <ProjectReference Include="..\Nfc.Infra.CrossCutting.Commons\Nfc.Infra.CrossCutting.Commons.csproj" />
     <ProjectReference Include="..\Nfc.Infra.Data.EF\Nfc.Infra.Data.EF.csproj" />
     <ProjectReference Include="..\Nfc.Infra.HangFire\Nfc.Infra.HangFire.csproj" />
   </ItemGroup>
