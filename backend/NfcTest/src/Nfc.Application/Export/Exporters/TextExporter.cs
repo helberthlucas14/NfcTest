@@ -11,10 +11,13 @@ namespace Nfc.Application.Export.Exporters
 
         public Task<byte[]> ExportAsync<T>(IEnumerable<T> data, CancellationToken cancellationToken)
         {
+            Thread.Sleep(TimeSpan.FromSeconds(5));
             var sb = new StringBuilder();
 
             if (data is IEnumerable<NotaFiscal> notas)
             {
+                var randomNumber = new Random().Next(1, 100);
+
                 foreach (var n in notas)
                 {
                     sb.AppendLine($"Nota {n.Id}");
@@ -28,6 +31,9 @@ namespace Nfc.Application.Export.Exporters
                     }
                     sb.AppendLine(new string('-', 40));
                 }
+
+                if (randomNumber % 2 > 0)
+                    throw new Exception("Falha ao exportar");
             }
             else
             {
