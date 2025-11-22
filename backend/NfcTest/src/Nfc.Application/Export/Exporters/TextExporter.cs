@@ -17,6 +17,7 @@ namespace Nfc.Application.Export.Exporters
             {
                 foreach (var n in notas)
                 {
+
                     sb.AppendLine($"Nota {n.Id}");
                     sb.AppendLine($"Emissor: {n.Emissor}");
                     sb.AppendLine($"Data de Emissão: {n.DataEmissao:yyyy-MM-dd}");
@@ -27,6 +28,7 @@ namespace Nfc.Application.Export.Exporters
                         sb.AppendLine($"  - {i.Descricao} | Valor: {i.Valor:0.###}");
                     }
                     sb.AppendLine(new string('-', 40));
+                    Thread.Sleep(TimeSpan.FromSeconds(10));
                 }
             }
             else
