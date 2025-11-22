@@ -1,4 +1,5 @@
 using Nfc.Infra.CrossCutting.IoC;
+using Nfc.Infra.CrossCutting.Commons.Filters;
 using Nfc.Infra.CrossCutting.Commons.Middlewares;
 using Nfc.Infra.HangFire;
 using Scalar.AspNetCore;
@@ -11,8 +12,7 @@ builder.Services
     .RegisterServices(builder.Configuration)
     .AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Program).Assembly))
     .AddHttpContextAccessor()
-    .AddControllers()
-
+    .AddControllers(options => options.Filters.Add<ApiGlobalExceptionFilter>())
     ;
 
 builder.Services.AddScoped<Nfc.Application.Export.IExportStatusNotifier, Nfc.Api.Notifications.SignalRExportStatusNotifier>();

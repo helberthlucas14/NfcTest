@@ -1,4 +1,4 @@
-﻿using FC.Codeflix.Catalog.Application.Exceptions;
+﻿using Nfc.Application.Exceptions;
 using Microsoft.EntityFrameworkCore;
 using Nfc.Application.UseCases.NotaFiscal.Common;
 using Nfc.Domain.Entity;

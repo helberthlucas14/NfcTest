@@ -1,4 +1,4 @@
-﻿namespace FC.Codeflix.Catalog.Application.Exceptions
+﻿namespace Nfc.Application.Exceptions
 {
     public class NotFoundException : ApplicationException
     {

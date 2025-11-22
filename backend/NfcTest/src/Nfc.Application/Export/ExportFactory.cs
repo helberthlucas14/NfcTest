@@ -1,4 +1,4 @@
-﻿using FC.Codeflix.Catalog.Application.Exceptions;
+﻿using Nfc.Application.Exceptions;
 using Nfc.Application.Export.Interfaces;
 
 namespace Nfc.Application.Export
