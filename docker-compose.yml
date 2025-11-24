@@ -105,6 +105,18 @@ services:
       - service_nfc_network
     restart: always
 
+  redis-exporter:
+    image: oliver006/redis_exporter:latest
+    container_name: redis_exporter
+    depends_on:
+      nfc.redis:
+        condition: service_started
+    environment:
+      - REDIS_ADDR=redis://nfc_redis_db:6379
+    networks:
+      - service_nfc_network
+    restart: unless-stopped
+
   grafana:
     image: grafana/grafana:latest
     container_name: grafana
@@ -113,11 +125,26 @@ services:
     environment:
       - GF_SECURITY_ADMIN_USER=admin
       - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_METRICS_ENABLED=true
     volumes:
       - ./observability/grafana/datasources/datasources.yml:/etc/grafana/provisioning/datasources/datasources.yml:ro
     networks:
       - service_nfc_network
     restart: always
+
+  mssql-exporter:
+    image: awaragi/prometheus-mssql-exporter:latest
+    container_name: mssql_exporter
+    depends_on:
+      nfc.mvp:
+        condition: service_started
+    environment:
+      - SERVER=nfcDb
+      - USERNAME=SA
+      - PASSWORD=SqlServer2019!
+    networks:
+      - service_nfc_network
+    restart: unless-stopped
 
   nfc.api:
     build:
