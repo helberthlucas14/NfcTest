@@ -128,6 +128,8 @@ services:
       - GF_METRICS_ENABLED=true
     volumes:
       - ./observability/grafana/datasources/datasources.yml:/etc/grafana/provisioning/datasources/datasources.yml:ro
+      - ./observability/grafana/dashboards/dashboards.yml:/etc/grafana/provisioning/dashboards/dashboards.yml:ro
+      - ./observability/grafana/dashboards:/var/lib/grafana/dashboards:ro
     networks:
       - service_nfc_network
     restart: always
