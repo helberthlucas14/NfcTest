@@ -5,7 +5,8 @@
 - Subir todo o ambiente:
   - `docker compose up -d`
 - URLs principais:
-  - API: `http://localhost:8085`
+  - API: `http://localhost:8085/`
+  - Documentação: `http://localhost:8085/scalar/v1`
   - Frontend: `http://localhost:8082`
   - Hangfire Dashboard: `http://localhost:8085/hangfire`
   - Seq (UI): `http://localhost:8081` — ingest `http://localhost:5341`
