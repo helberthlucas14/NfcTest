@@ -31,7 +31,7 @@ namespace Nfc.Infra.HangFire.Jobs
 
         public async Task<string> ScheduleExportAsync(ExportType type, long[] ids, CancellationToken cancellationToken)
         {
-            var correlationId = Guid.NewGuid();
+            var correlationId = _ctx.CorrelationId != Guid.Empty ? _ctx.CorrelationId : Guid.NewGuid();
             _ctx.CorrelationId = correlationId;
             using var activity = ObservabilitySetup.Activity.StartActivity("hangfire.schedule", ActivityKind.Producer);
             activity?.SetTag("export.type", type.ToString());
