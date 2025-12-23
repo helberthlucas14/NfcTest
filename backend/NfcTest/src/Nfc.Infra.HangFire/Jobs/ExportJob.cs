@@ -5,6 +5,8 @@ using Nfc.Application.Export.Interfaces;
 using StackExchange.Redis;
 using System.Linq;
 using Serilog.Context;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace Nfc.Infra.HangFire.Jobs
 {
@@ -114,8 +116,12 @@ namespace Nfc.Infra.HangFire.Jobs
 
         private static string BuildDedupKey(ExportType type, long[] ids)
         {
-            var normalized = string.Join('-', ids.OrderBy(x => x));
-            return $"export:dedup:{type}:{normalized}";
+            var normalizedIds = ids?.OrderBy(x => x) ?? Enumerable.Empty<long>();
+            var payload = $"{type}:{string.Join(',', normalizedIds)}";
+            using var sha = SHA256.Create();
+            var hashBytes = sha.ComputeHash(Encoding.UTF8.GetBytes(payload));
+            var hash = Convert.ToHexString(hashBytes).ToLowerInvariant();
+            return $"export:dedup:{type}:{hash}";
         }
     }
 }

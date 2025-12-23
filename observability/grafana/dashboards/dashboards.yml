@@ -1,0 +1,11 @@
+apiVersion: 1
+providers:
+  - name: Nfc Dashboards
+    orgId: 1
+    folder: Nfc
+    type: file
+    disableDeletion: false
+    editable: true
+    options:
+      path: /var/lib/grafana/dashboards
+      recursive: true

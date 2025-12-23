@@ -6,6 +6,7 @@
   </button>
 </mat-toolbar>
 
+
 <mat-card class="m-4">
   <table mat-table [dataSource]="dataSource" class="mat-elevation-z1 w-full">
 
@@ -51,12 +52,8 @@
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
     <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
   </table>
-    <mat-paginator
-    [length]="meta?.total || 0"
-    [pageSize]="pageSize"
-    [pageIndex]="(meta?.currentPage || 1) - 1"
-    [pageSizeOptions]="[10, 20, 50]"
-    (page)="onPage($event)">
+  <mat-paginator [length]="meta?.total || 0" [pageSize]="pageSize" [pageIndex]="(meta?.currentPage || 1) - 1"
+    [pageSizeOptions]="[10, 20, 50]" (page)="onPage($event)">
   </mat-paginator>
 </mat-card>
 <div class="acoes-export">
@@ -66,9 +63,7 @@
     <button mat-button (click)="clearSelection()">Limpar seleção</button>
   </div>
   <div class="export-buttons" style="display:flex; justify-content:center; gap:12px; flex-wrap:wrap; margin-top:8px;">
-  <button mat-raised-button (click)="exportTxt()">Exportar TXT</button>
-  <button mat-raised-button color="primary" (click)="exportJson()">Exportar JSON</button>
+    <button mat-raised-button (click)="exportTxt()">Exportar TXT</button>
+    <button mat-raised-button color="primary" (click)="exportJson()">Exportar JSON</button>
   </div>
 </div>
-
-

@@ -1,0 +1,93 @@
+{
+  "id": null,
+  "uid": "nfc-observability",
+  "title": "Nfc Observabilidade",
+  "tags": ["Nfc"],
+  "timezone": "",
+  "schemaVersion": 38,
+  "version": 1,
+  "refresh": "30s",
+  "time": { "from": "now-24h", "to": "now" },
+  "panels": [
+    {
+      "type": "stat",
+      "title": "Jobs Concluídos (24h)",
+      "gridPos": { "x": 0, "y": 0, "w": 8, "h": 6 },
+      "options": { "reduceOptions": { "calcs": ["sum"], "fields": "", "values": false } },
+      "targets": [
+        {
+          "expr": "sum(increase(nfc_jobs_succeeded_total[24h]))",
+          "legendFormat": "concluidos",
+          "datasource": { "type": "prometheus", "uid": "Prometheus" }
+        }
+      ]
+    },
+    {
+      "type": "stat",
+      "title": "Jobs Falhados (24h)",
+      "gridPos": { "x": 8, "y": 0, "w": 8, "h": 6 },
+      "options": { "reduceOptions": { "calcs": ["sum"], "fields": "", "values": false } },
+      "targets": [
+        {
+          "expr": "sum(increase(nfc_jobs_failed_total[24h]))",
+          "legendFormat": "falhados",
+          "datasource": { "type": "prometheus", "uid": "Prometheus" }
+        }
+      ]
+    },
+    {
+      "type": "bargauge",
+      "title": "Concluídos por tipo (24h)",
+      "gridPos": { "x": 16, "y": 0, "w": 8, "h": 6 },
+      "options": { "displayMode": "gradient", "orientation": "horizontal" },
+      "targets": [
+        {
+          "expr": "sum by(job_type) (increase(nfc_jobs_succeeded_total[24h]))",
+          "legendFormat": "{{job_type}}",
+          "datasource": { "type": "prometheus", "uid": "Prometheus" }
+        }
+      ]
+    },
+    {
+      "type": "timeseries",
+      "title": "Concluídos por 5m (por tipo)",
+      "gridPos": { "x": 0, "y": 6, "w": 12, "h": 8 },
+      "options": { "legend": { "displayMode": "table", "placement": "bottom" } },
+      "targets": [
+        {
+          "expr": "sum by(job_type) (rate(nfc_jobs_succeeded_total[5m]))",
+          "legendFormat": "{{job_type}}",
+          "datasource": { "type": "prometheus", "uid": "Prometheus" }
+        }
+      ]
+    },
+    {
+      "type": "timeseries",
+      "title": "Falhados por 5m (por tipo)",
+      "gridPos": { "x": 12, "y": 6, "w": 12, "h": 8 },
+      "options": { "legend": { "displayMode": "table", "placement": "bottom" } },
+      "targets": [
+        {
+          "expr": "sum by(job_type) (rate(nfc_jobs_failed_total[5m]))",
+          "legendFormat": "{{job_type}}",
+          "datasource": { "type": "prometheus", "uid": "Prometheus" }
+        }
+      ]
+    },
+    {
+      "type": "timeseries",
+      "title": "Duração p95 (ms)",
+      "gridPos": { "x": 0, "y": 14, "w": 24, "h": 8 },
+      "fieldConfig": { "defaults": { "unit": "ms" }, "overrides": [] },
+      "options": { "legend": { "displayMode": "list", "placement": "bottom" } },
+      "targets": [
+        {
+          "expr": "histogram_quantile(0.95, sum by (le) (rate(nfc_job_duration_ms_bucket[5m])))",
+          "legendFormat": "p95",
+          "datasource": { "type": "prometheus", "uid": "Prometheus" }
+        }
+      ]
+    }
+  ],
+  "templating": { "list": [] }
+}
