@@ -67,9 +67,10 @@ namespace Nfc.Application.Services
                 var exporter = _factory.Create(type);
                 var notas = new List<NotaFiscal>();
                 if (ids != null && ids.Count > 0)
-                    notas = _service.GetAllQuery.ToList()
-                        .Where(n => ids.Contains(n.Id))
-                        .ToList();
+                {
+                    var result = await _service.GetListByIdsAsync(ids, cancellationToken);
+                    notas = result.ToList();
+                }
 
                 var bytes = await exporter.ExportAsync(notas, cancellationToken);
                 var duration = (DateTime.UtcNow - start).TotalMilliseconds;

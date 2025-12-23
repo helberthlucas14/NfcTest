@@ -1,10 +1,9 @@
-﻿using Nfc.Application.Exceptions;
+using Nfc.Application.Exceptions;
 using Microsoft.Extensions.Logging;
 using Nfc.Application.UseCases.NotaFiscal.Common;
 using Nfc.Domain.Entity;
 using Nfc.Domain.Interfaces.Repositories;
 using Nfc.Domain.Interfaces.Services;
-using System.Diagnostics.CodeAnalysis;
 
 namespace Nfc.Application.Services
 {
@@ -20,10 +19,20 @@ namespace Nfc.Application.Services
             _logger = logger;
         }
 
-        public IQueryable<NotaFiscal> GetAllQuery => _repository.GetAllQuery;
+        public ICollection<NotaFiscal> GetAll => _repository.GetAllQuery?.ToList() ?? new List<NotaFiscal>();
 
         public async Task<bool> ExistsAsync(long id, CancellationToken cancellationToken)
             => await _repository.ExistsAsync(id, cancellationToken);
+
+        public async Task<IEnumerable<long>> GetExistingIdsAsync(IEnumerable<long> ids, CancellationToken cancellationToken)
+        {
+            return await _repository.GetExistingIdsAsync(ids, cancellationToken);
+        }
+
+        public async Task<IEnumerable<NotaFiscal>> GetListByIdsAsync(IEnumerable<long> ids, CancellationToken cancellationToken)
+        {
+            return await _repository.GetListByIdsAsync(ids, cancellationToken);
+        }
 
         public async Task<PagedList<NotaFiscal>> GetAllQueryAsync(NotaFiscalQueryStringParameters parameters, CancellationToken cancellationToken)
         {

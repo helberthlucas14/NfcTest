@@ -8,5 +8,8 @@ namespace Nfc.Domain.Interfaces.Repositories
     {
         Task<PagedList<NotaFiscal>> GetAllAsync(NotaFiscalQueryStringParameters parameters,
                    CancellationToken cancellationToken);
+
+        Task<IEnumerable<long>> GetExistingIdsAsync(IEnumerable<long> ids, CancellationToken cancellationToken);
+        Task<IEnumerable<NotaFiscal>> GetListByIdsAsync(IEnumerable<long> ids, CancellationToken cancellationToken);
     }
 }

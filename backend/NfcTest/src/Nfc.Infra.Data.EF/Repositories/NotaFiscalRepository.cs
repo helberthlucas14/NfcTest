@@ -1,4 +1,4 @@
-﻿using Nfc.Application.Exceptions;
+using Nfc.Application.Exceptions;
 using Microsoft.EntityFrameworkCore;
 using Nfc.Application.UseCases.NotaFiscal.Common;
 using Nfc.Domain.Entity;
@@ -41,6 +41,24 @@ namespace Nfc.Infra.Data.EF.Repositories
 
         public Task<bool> ExistsAsync(long id, CancellationToken cancellationToken) =>
             _notas.AnyAsync(x => x.Id == id, cancellationToken);
+
+        public async Task<IEnumerable<long>> GetExistingIdsAsync(IEnumerable<long> ids, CancellationToken cancellationToken)
+        {
+            return await _notas
+                .AsNoTracking()
+                .Where(x => ids.Contains(x.Id))
+                .Select(x => x.Id)
+                .ToListAsync(cancellationToken);
+        }
+
+        public async Task<IEnumerable<NotaFiscal>> GetListByIdsAsync(IEnumerable<long> ids, CancellationToken cancellationToken)
+        {
+            return await _notas
+                .Include(n => n.Items)
+                .AsNoTracking()
+                .Where(x => ids.Contains(x.Id))
+                .ToListAsync(cancellationToken);
+        }
 
         public async Task<NotaFiscal> GetByIdAsync(long id, CancellationToken cancellationToken)
         {

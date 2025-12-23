@@ -6,7 +6,7 @@ namespace Nfc.Domain.Interfaces.Services.Base
     {
         Task<TEntity> RegisterAsync(TEntity entity, CancellationToken cancellationToken);
         Task UpdateAsync(TEntity entity, CancellationToken cancellationToken);
-        IQueryable<TEntity> GetAllQuery { get; }
+        ICollection<TEntity> GetAll { get; }
         Task<TEntity> GetByIdAsync(long id, CancellationToken cancellationToken);
         Task<bool> ExistsAsync(long id, CancellationToken cancellationToken);
         Task DeleteByIdAsync(long id, CancellationToken cancellationToken);
